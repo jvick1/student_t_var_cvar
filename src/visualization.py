@@ -56,6 +56,9 @@ def plot_tail_comparison(normal_params, t_params, tail_min=-0.10):
 
 
 if __name__ == "__main__":
+    """
+    When you run it as a module, make sure you are in the \student_t_var_cvar\ folder and run `python -m src.visualization`, Python understands the package structure and relative imports correctly.
+    """
     from .distributions import fit_normal, fit_student_t
     
     try:
