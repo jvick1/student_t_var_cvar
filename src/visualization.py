@@ -12,6 +12,18 @@ import pandas as pd
 import numpy as np
 
 def plot_histogram_with_fits(returns, normal_params, t_params, alpha=0.05):
+    """
+    Plot histogram w/ fitted Normal and Student-t prob density functions (PDFs)
+    
+    Parameters ----------
+    returns: Our log returns
+    normal_params: normal dist
+    t_params: student t dist
+    alpha: tail prob for VaR overlay
+
+    Output ----------
+    PDFs histogram
+    """
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.histplot(returns, kde=False, stat="density", ax=ax, label="Empirical")
 
@@ -31,6 +43,17 @@ def plot_histogram_with_fits(returns, normal_params, t_params, alpha=0.05):
 
 
 def plot_qq_plots(returns, normal_params, t_params):
+    """
+    Generates quantile-quantile (QQ) plots comparing returns to fitted Normal and Student-t. Good for normal dist.
+    
+    Parameters ----------
+    returns: Our log returns
+    normal_params: normal dist
+    t_params: student t dist
+
+    Output ----------
+    Two QQ-plots 
+    """
     fig, axs = plt.subplots(1, 2, figsize=(14, 6))
 
     probplot(returns, dist=norm(*normal_params), plot=axs[0])
@@ -42,7 +65,18 @@ def plot_qq_plots(returns, normal_params, t_params):
     return fig
 
 
-def plot_tail_comparison(normal_params, t_params, tail_min=-0.10):
+def plot_tail_comparison(normal_params, t_params, tail_min=-0.30):
+    """
+    Plot tail compairson for Normal and Student-t on a log scale - useful when extreme events are common
+    
+    Parameters ----------
+    normal_params: normal dist
+    t_params: student t dist
+    tail_min: min for tail viz
+
+    Output ----------
+    left-tail density comparison
+    """
     fig, ax = plt.subplots(figsize=(10, 6))
 
     x_tail = np.linspace(tail_min, 0, 1000)
