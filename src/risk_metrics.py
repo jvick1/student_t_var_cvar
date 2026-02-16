@@ -1,0 +1,97 @@
+"""
+Author: Jake Vick
+Purpose: VaR / CVaR modeling
+"""
+
+from scipy.stats import norm, t
+from pathlib import Path
+
+import pandas as pd
+
+def compute_var_normal(mu: float, sigma: float, alpha: float = 0.05) -> float:
+    """
+    Compute parametric VaR for Normal distribution (left-tail quantile).
+
+    Parameters ----------
+    mu: Mean return
+    sigma: Standard deviation of returns
+    alpha: Tail probability (0.05 for 95% VaR)
+
+    Output ----------
+    VaR estimate
+    """
+    return mu + sigma * norm.ppf(alpha)
+
+def compute_cvar_normal(mu: float, sigma: float, alpha: float = 0.05) -> float:
+    """
+    Compute parametric CVaR (Expected Shortfall) for Normal distribution.
+
+    Parameters ----------
+    mu, sigma, alpha
+
+    Output ----------
+    CVaR estimate
+    """
+    z = norm.ppf(alpha)
+    return mu - sigma * (norm.pdf(z) / alpha)
+
+def compute_var_student_t(df: float, loc: float, scale: float, alpha: float = 0.05) -> float:
+    """
+    Compute parametric VaR for Student-t distribution.
+
+    Parameters ----------
+    df: Degrees of freedom
+    loc: Location parameter
+    scale: Scale parameter
+    alpha: Tail probability
+
+    Output ----------
+    VaR estimate
+    """
+    return loc + scale * t.ppf(alpha, df)
+
+def compute_cvar_student_t(df: float, loc: float, scale: float, alpha: float = 0.05) -> float:
+    """
+    Compute parametric CVaR (Expected Shortfall) for Student-t distribution.
+
+    Parameters ----------
+    df, loc, scale, alpha
+
+    Output ----------
+    CVaR estimate
+    """
+    t_q = t.ppf(alpha, df)
+    density = t.pdf(t_q, df)
+    adjustment = (df + t_q**2) / (df - 1)
+    return loc - scale * (density / alpha) * adjustment
+
+if __name__ == "__main__":
+    """
+    Run with:
+        python -m src.risk_metrics
+    """
+
+    from .distributions import fit_normal, fit_student_t
+
+    try:
+        base_dir = Path(__file__).resolve().parents[1]
+        returns_path = base_dir / "data" / "output" / "data.csv"
+
+        returns = pd.read_csv(returns_path)["return"]
+
+        # Fit distributions
+        mu, sigma = fit_normal(returns)
+        df, loc, scale = fit_student_t(returns)
+
+        alpha = 0.05
+
+        print("Risk Metric Test\n")
+
+        print(f"Normal VaR (95%):  {compute_var_normal(mu, sigma, alpha):.4f}")
+        print(f"Normal CVaR (95%): {compute_cvar_normal(mu, sigma, alpha):.4f}\n")
+
+        print(f"Student-t VaR (95%):  {compute_var_student_t(df, loc, scale, alpha):.4f}")
+        print(f"Student-t CVaR (95%): {compute_cvar_student_t(df, loc, scale, alpha):.4f}")
+
+    except Exception as e:
+        print(f"Risk metric test failed: {e}")
