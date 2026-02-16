@@ -16,7 +16,9 @@ student_t_var_cvar/
 ├── src/
 │   ├── returns.py                 # Takes /raw and /output log returns 
 │   ├── distributions.py           # Distribution fitting and risk metrics
-│   └── visualization.py           # Plots (PDF, QQ, and density)
+│   ├── visualization.py           # Plots (PDF, QQ, and density)
+│   ├── risk_metrics.py            # Calc for Var & Cvar
+│   └── main.py                    # Orchestration Layer
 │
 └── README.md                      # Project documentation
 ```
@@ -29,3 +31,9 @@ Fits normal and student-t distributions to log retuns.
 
 ## `visualization.py`
 Returns distributions with fitted Normal & Student-t overlay, QQ-plots against each distribution, and left-tail density comparison to highlight extreme risk behavior. 
+
+## `risk_metrics.py`
+Uses both normal and Student-t the distributions and calculates the Var & Cvar  
+
+## `main.py`
+Orchestration Layer - runs dist, viz and cacls risk metrics for static btc file.
