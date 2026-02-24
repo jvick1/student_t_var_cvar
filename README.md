@@ -2,6 +2,9 @@
 
 This project implements Value at Risk (VaR) and Conditional Value at Risk (CVaR) using the Student’s t-distribution, capturing fat-tailed behavior commonly observed in financial returns ($BTC). The pipeline is organized to clearly separate raw data, log returns, distribution fitting, and visualization for reproducible risk modeling.
 
+# Updates
+For additional functionality check out this [repo](https://github.com/jvick1/crypto-risk-engine/tree/main). It takes this base project and allows users to select their desired coin. 
+
 # Folder Structure
 ```graphql
 student_t_var_cvar/
